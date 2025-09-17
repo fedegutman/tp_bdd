@@ -64,61 +64,71 @@ CREATE TABLE profesorEnseñaMateria (
 );
 
 CREATE TABLE disponibilidad (
+  dia_semana VARCHAR(20),
+  horario_inicio TIME(0),
+  horario_fin TIME(0),
+
+  PRIMARY KEY (dia_semana, horario_inicio, horario_fin)
 );
 
 CREATE TABLE profesorTieneDisponibilidad (
+  id_profesor INT,
+  dia_semana VARCHAR(20),
+  horario_inicio TIME(0),
+  horario_fin TIME(0),
+
+  PRIMARY KEY (id_profesor, dia_semana, horario_inicio, horario_fin),
+
+  FOREIGN KEY (id_profesor) REFERENCES profesor(id_profesor) ON DELETE CASCADE,
+  FOREIGN KEY (dia_semana, horario_inicio, horario_fin) REFERENCES disponibilidad(dia_semana, horario_inicio, horario_fin) ON DELETE CASCADE
 );
 
-CREATE TABLE Clase (
+CREATE TABLE clase (
   id_clase INT PRIMARY KEY,
 
   duracion_en_horas FLOAT,
+  fecha_y_hora TIMESTAMP(0), -- esto hay que agregarlo en el diagrama y en las tablas
   modalidad VARCHAR(50),
   estado VARCHAR(50),
   id_profesor INT NOT NULL,
 
-  FOREIGN KEY (id_profesor) REFERENCES Profesor(id_profesor)
+  FOREIGN KEY (id_profesor) REFERENCES profesor(id_profesor)
 );
 
-
-CREATE TABLE Inscripcion (
+CREATE TABLE inscripcion (
   id_estudiante INT,
   id_clase INT,
 
-  estado_inscripcion VARCHAR(50), -- xq esto?
-  fecha_inscripcion TIMESTAMP, -- idem
-
   PRIMARY KEY (id_estudiante, id_clase),
 
-  FOREIGN KEY (id_estudiante) REFERENCES Estudiante(id_estudiante) ON DELETE CASCADE,
-  FOREIGN KEY (id_clase) REFERENCES Clase(id_clase) ON DELETE CASCADE
+  FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante) ON DELETE CASCADE,
+  FOREIGN KEY (id_clase) REFERENCES clase(id_clase) ON DELETE CASCADE
 );
-
 
 CREATE TABLE Pago (
-  id_pago SERIAL PRIMARY KEY,
-  numero_recibo VARCHAR(100) UNIQUE,
+  id_pago PRIMARY KEY,
 
+  numero_recibo VARCHAR(30) UNIQUE,
   id_clase INTEGER NOT NULL,
-  metodo VARCHAR(50),
-  estado_pago VARCHAR(50),
-  monto NUMERIC(10,2),
+  metodo VARCHAR(30),
+  estado_pago VARCHAR(30),
+  monto FLOAT, -- preguntar como se hace con los atributos derivados
 
-  FOREIGN KEY (id_clase) REFERENCES Clase(id_clase) ON DELETE CASCADE
+  FOREIGN KEY (id_clase) REFERENCES clase(id_clase) ON DELETE CASCADE
 );
 
-
 CREATE TABLE Reseña (
-  id_reseña SERIAL PRIMARY KEY,
-  id_estudiante INTEGER NOT NULL,
-  id_profesor INTEGER NOT NULL,
+  -- id_reseña PRIMARY KEY,
+  id_estudiante INT NOT NULL,
+  id_profesor INT NOT NULL,
 
-  puntaje SMALLINT,
-  comentario TEXT,
-  fecha TIMESTAMP DEFAULT now(),
+  puntaje INT,
+  comentario VARCHAR(300),
+  fecha TIMESTAMP(0),
 
+  PRIMARY KEY (id_estudiante, id_profesor),
 
-  FOREIGN KEY (id_estudiante) REFERENCES Estudiante(id_estudiante) ON DELETE CASCADE,
-  FOREIGN KEY (id_profesor) REFERENCES Profesor(id_usuario) ON DELETE CASCADE
+  FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante) ON DELETE CASCADE,
+  FOREIGN KEY (id_profesor) REFERENCES profesor(id_profesor) ON DELETE CASCADE
 );
 
