@@ -1,7 +1,7 @@
 CREATE DATABASE clases_particulares_db;
 
 -- Conectarse a la base
--- \c clases_db;
+-- \c clases_particulares_db;
 
 CREATE TABLE usuarios (
     id_usuario INT PRIMARY KEY,
