@@ -106,9 +106,10 @@ CREATE TABLE inscripcion (
 );
 
 CREATE TABLE Pago (
-  id_pago PRIMARY KEY,
+  -- id_pago PRIMARY KEY,
 
-  numero_recibo VARCHAR(30) UNIQUE,
+  numero_recibo VARCHAR(30) PRIMARY KEY,
+  
   id_clase INTEGER NOT NULL,
   metodo VARCHAR(30),
   estado_pago VARCHAR(30),
